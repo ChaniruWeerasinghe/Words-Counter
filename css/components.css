@@ -111,7 +111,7 @@
    ========================================================================== */
 .custom-dropdown {
   position: relative;
-  min-width: 170px;
+  min-width: 210px;
   display: inline-block;
   user-select: none;
 }
@@ -133,6 +133,7 @@
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-sm);
+  white-space: nowrap;
 }
 
 .dropdown-trigger:hover {
@@ -149,6 +150,7 @@
   height: 14px;
   color: var(--text-muted);
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .dropdown-trigger.open .dropdown-chevron {
@@ -159,19 +161,26 @@
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  right: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: 320px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-xl);
-  padding: 0.35rem;
-  z-index: 50;
+  padding: 0.4rem;
+  z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   max-height: 280px;
   overflow-y: auto;
+}
+
+.dropdown-menu.align-right {
+  left: auto;
+  right: 0;
 }
 
 .dropdown-menu.open {
@@ -184,13 +193,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.55rem 0.75rem;
+  gap: 0.85rem;
+  padding: 0.6rem 0.85rem;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-main);
   cursor: pointer;
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .dropdown-option:hover {
@@ -205,11 +216,15 @@
 }
 
 .dropdown-option .option-badge {
-  font-size: 0.75rem;
-  padding: 0.15rem 0.45rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  padding: 0.15rem 0.5rem;
   border-radius: var(--radius-full);
   background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 /* ==========================================================================

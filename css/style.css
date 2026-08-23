@@ -264,7 +264,8 @@ body {
   gap: 2rem;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 20;
 }
 
 .hero-info h1 {
@@ -534,6 +535,8 @@ body {
   gap: 1rem;
   border-bottom: 1.5px solid var(--border-color);
   padding-bottom: 0.75rem;
+  position: relative;
+  z-index: 15;
 }
 
 .workspace-tabs {
