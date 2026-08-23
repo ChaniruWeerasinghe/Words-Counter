@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="verbaFav" x1="2" y1="4" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4338CA" />
+      <stop offset="0.5" stop-color="#6366F1" />
+      <stop offset="1" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+  <path d="M4 7L16 27L28 7" stroke="url(#verbaFav)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10 12L16 22L22 12" stroke="url(#verbaFav)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+  <circle cx="16" cy="6" r="2.2" fill="url(#verbaFav)"/>
+</svg>
