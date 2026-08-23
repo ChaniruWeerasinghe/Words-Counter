@@ -26,7 +26,8 @@ class ToastManager {
         title = '',
         message = '',
         type = 'info', // 'success' | 'warning' | 'danger' | 'info'
-        duration = 4000
+        duration = 4000,
+        action = null // { label: 'Undo', onClick: Function }
       } = typeof options === 'string' ? { message: options } : options;
 
       const toast = document.createElement('div');
@@ -40,6 +41,7 @@ class ToastManager {
         <div class="toast-content">
           ${title ? `<div class="toast-title">${this.escapeHtml(title)}</div>` : ''}
           <div class="toast-message">${this.escapeHtml(message)}</div>
+          ${action ? `<button type="button" class="toast-action-btn" id="toast-act-btn">${this.escapeHtml(action.label || 'Action')}</button>` : ''}
         </div>
         <button type="button" class="toast-close" aria-label="Close notification">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -48,6 +50,14 @@ class ToastManager {
           </svg>
         </button>
       `;
+
+      if (action && typeof action.onClick === 'function') {
+        toast.querySelector('#toast-act-btn')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          action.onClick();
+          removeToast();
+        });
+      }
 
       const closeBtn = toast.querySelector('.toast-close');
       const removeToast = () => {

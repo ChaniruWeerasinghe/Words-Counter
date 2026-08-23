@@ -91,6 +91,31 @@ document.addEventListener('DOMContentLoaded', () => {
         menu?.classList.toggle('open', !isOpen);
       });
 
+      // Keyboard navigation for dropdowns
+      document.addEventListener('keydown', (e) => {
+        const openMenu = document.querySelector('.dropdown-menu.open');
+        if (!openMenu) return;
+
+        const dropdown = openMenu.closest('.custom-dropdown');
+        const trigger = dropdown?.querySelector('.dropdown-trigger');
+        const options = Array.from(openMenu.querySelectorAll('.dropdown-option'));
+        let selectedIndex = options.findIndex(opt => opt.classList.contains('selected'));
+
+        if (e.key === 'Escape') {
+          trigger?.classList.remove('open');
+          openMenu.classList.remove('open');
+          trigger?.focus();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = (selectedIndex + 1) % options.length;
+          options[nextIndex]?.click();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = (selectedIndex - 1 + options.length) % options.length;
+          options[prevIndex]?.click();
+        }
+      });
+
       // Template selection handler
       document.querySelectorAll('#template-dropdown .dropdown-option').forEach(option => {
         option.addEventListener('click', (e) => {
@@ -140,14 +165,38 @@ document.addEventListener('DOMContentLoaded', () => {
       tabLive?.addEventListener('click', () => this.switchMode('live'));
       tabUpload?.addEventListener('click', () => this.switchMode('upload'));
 
-      // Global Target Input
+      // Global Target Input with Real-time Validation
       const targetInput = document.getElementById('global-target-input');
       targetInput?.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value, 10);
-        this.state.globalTarget = isNaN(val) || val < 0 ? 0 : val;
+        let val = parseInt(e.target.value, 10);
+        if (isNaN(val) || val < 0) {
+          val = 0;
+          if (e.target.value.startsWith('-')) {
+            e.target.value = '0';
+            window.Toast?.warning('Invalid Target', 'Word limit cannot be a negative number.');
+          }
+        }
+        this.state.globalTarget = val;
         this.saveState();
         this.updateStats();
       });
+
+      // Mobile Touch Toggle for GitHub Footer Dropdown
+      const githubWrap = document.querySelector('.github-dropdown-wrap');
+      const githubLink = githubWrap?.querySelector('.social-link-btn');
+      const githubMenu = githubWrap?.querySelector('.github-hover-menu');
+
+      if (githubLink && githubMenu) {
+        githubLink.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            const isOpen = githubMenu.style.visibility === 'visible';
+            githubMenu.style.opacity = isOpen ? '0' : '1';
+            githubMenu.style.visibility = isOpen ? 'hidden' : 'visible';
+            githubMenu.style.pointerEvents = isOpen ? 'none' : 'auto';
+          }
+        });
+      }
 
       // Citation Toggle Switch
       const citationToggle = document.getElementById('citation-toggle');
@@ -337,11 +386,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // Save snapshot for Undo
+      const backupSections = JSON.parse(JSON.stringify(this.state.sections));
+
       this.state.sections.forEach(s => s.text = '');
       this.renderSections();
       this.saveState();
       this.updateStats();
-      window.Toast?.info('Cleared Workspace', 'All section text has been reset.');
+
+      window.Toast?.show({
+        title: 'Cleared Workspace',
+        message: 'All section text has been reset.',
+        type: 'warning',
+        duration: 7000,
+        action: {
+          label: 'Undo Clear',
+          onClick: () => {
+            this.state.sections = backupSections;
+            this.renderSections();
+            this.saveState();
+            this.updateStats();
+            window.Toast?.success('Restored', 'Your workspace text has been restored.');
+          }
+        }
+      });
     },
 
     renderSections() {
@@ -568,6 +636,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // Clear / Upload Another Document Button
+      document.getElementById('clear-uploaded-doc-btn')?.addEventListener('click', () => {
+        this.state.uploadedDoc = null;
+        const resultsCard = document.getElementById('doc-results-card');
+        if (resultsCard) resultsCard.style.display = 'none';
+        this.updateStats();
+        window.Toast?.info('Document Cleared', 'Upload zone ready for a new document.');
+      });
+
       // Transfer to Live Workspace Button
       document.getElementById('transfer-to-live-btn')?.addEventListener('click', () => {
         this.transferUploadedToLive();
@@ -651,6 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnTable = document.getElementById('btn-view-table');
       const paperView = document.getElementById('doc-paper-view');
       const tableView = document.getElementById('doc-table-view');
+      const toggleFoldAllBtn = document.getElementById('toggle-collapse-all-btn');
 
       if (btnReader && btnTable) {
         btnReader.onclick = () => {
@@ -665,6 +743,18 @@ document.addEventListener('DOMContentLoaded', () => {
           btnReader.classList.remove('active');
           paperView.style.display = 'none';
           tableView.style.display = 'block';
+        };
+      }
+
+      // Global Fold / Unfold All Toggle
+      let isAllFolded = false;
+      if (toggleFoldAllBtn) {
+        toggleFoldAllBtn.onclick = () => {
+          isAllFolded = !isAllFolded;
+          document.querySelectorAll('.doc-section-block').forEach(b => {
+            b.classList.toggle('collapsed', isAllFolded);
+          });
+          toggleFoldAllBtn.querySelector('span').textContent = isAllFolded ? 'Expand All' : 'Collapse All';
         };
       }
 
@@ -689,6 +779,9 @@ document.addEventListener('DOMContentLoaded', () => {
           sectionBlock.innerHTML = `
             <div class="doc-section-header">
               <div class="doc-section-title-wrap">
+                <button type="button" class="doc-section-fold-btn" id="fold-btn-${sec.id}" title="Collapse / Expand this section">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
                 <span class="heading-tag ${sec.tag || 'h1'}">${(sec.tag || 'h1').toUpperCase()}</span>
                 <span class="doc-section-title">${this.escapeHtml(sec.title)}</span>
                 ${sec.isAutoExcluded ? '<span class="limit-status-pill warning" style="font-size:0.65rem;">Auto-Excluded</span>' : ''}
@@ -713,12 +806,17 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
 
-            <div class="doc-section-body">
+            <div class="doc-section-body" id="body-${sec.id}">
               ${paragraphsHtml}
             </div>
           `;
 
           paperView.appendChild(sectionBlock);
+
+          // Bind Fold Button
+          sectionBlock.querySelector(`#fold-btn-${sec.id}`)?.addEventListener('click', () => {
+            sectionBlock.classList.toggle('collapsed');
+          });
 
           // Bind Exclude Switch in Paper View
           sectionBlock.querySelector(`#paper-exclude-${sec.id}`)?.addEventListener('change', (e) => {

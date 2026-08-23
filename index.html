@@ -286,10 +286,17 @@
               </div>
             </div>
 
-            <button type="button" class="btn btn-primary btn-sm" id="transfer-to-live-btn" title="Convert all sections into individual editable panels in the Live Workspace">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              <span>Transfer All Sections to Live Workspace</span>
-            </button>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-outline btn-sm" id="clear-uploaded-doc-btn" title="Clear current document and upload a new one">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                <span>Upload Another File</span>
+              </button>
+
+              <button type="button" class="btn btn-primary btn-sm" id="transfer-to-live-btn" title="Convert all sections into individual editable panels in the Live Workspace">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <span>Transfer All Sections to Live Workspace</span>
+              </button>
+            </div>
           </div>
 
           <!-- View Switcher Bar -->
@@ -304,8 +311,12 @@
                 <span>Headings Summary Table</span>
               </button>
             </div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">
-              Per-section live word count & exclusion controls
+
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <button type="button" class="btn-ghost btn-sm" id="toggle-collapse-all-btn" style="font-size:0.75rem; padding: 0.25rem 0.5rem;">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span>Toggle Fold All</span>
+              </button>
             </div>
           </div>
 

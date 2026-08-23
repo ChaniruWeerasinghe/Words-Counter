@@ -392,6 +392,7 @@
 .section-textarea {
   width: 100%;
   min-height: 140px;
+  max-height: 480px;
   padding: 1rem 1.15rem;
   background: var(--bg-input);
   border: 1.5px solid var(--border-color);
@@ -401,6 +402,7 @@
   line-height: 1.7;
   color: var(--text-main);
   resize: vertical;
+  overflow-y: auto;
   transition: var(--transition);
 }
 
@@ -816,6 +818,36 @@
   text-align: justify;
 }
 
+.doc-section-fold-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.doc-section-fold-btn:hover {
+  color: var(--primary);
+  background: var(--bg-surface);
+}
+
+.doc-section-fold-btn svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.doc-section-block.collapsed .doc-section-fold-btn svg {
+  transform: rotate(-90deg);
+}
+
+.doc-section-block.collapsed .doc-section-body {
+  display: none;
+}
+
 /* ==========================================================================
    Modals & Popups
    ========================================================================== */
@@ -982,6 +1014,26 @@
   font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1.4;
+}
+
+.toast-action-btn {
+  display: inline-block;
+  margin-top: 0.45rem;
+  padding: 0.25rem 0.65rem;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toast-action-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .toast-close {
