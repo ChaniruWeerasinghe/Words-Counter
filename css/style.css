@@ -182,25 +182,25 @@ body {
 }
 
 .logo-icon-wrap {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  box-shadow: 0 4px 12px var(--primary-glow);
   transition: var(--transition);
+  flex-shrink: 0;
 }
 
 .logo-icon-wrap:hover {
-  transform: translateY(-2px) rotate(4deg);
+  transform: translateY(-1px) scale(1.06);
 }
 
 .logo-icon-wrap svg {
-  width: 22px;
-  height: 22px;
+  width: 32px;
+  height: 32px;
 }
 
 .logo-text-wrap {

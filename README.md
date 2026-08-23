@@ -1,4 +1,4 @@
-# Words Counter - Academic Coursework and Report Analyzer
+# Verba - Academic Coursework Word Counter and Document Analyzer
 
 A comprehensive web-based word counter built for university students, researchers, and academic writers. It tracks strict coursework word limits, calculates tolerance margins (+-10%), and parses full documents to count words per heading.
 

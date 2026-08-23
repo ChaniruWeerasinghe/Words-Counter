@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LexiCount - Academic Coursework Word Counter & Report Analyzer</title>
+  <title>Verba — Academic Coursework Word Counter & Document Analyzer</title>
   <meta name="description" content="Precision word counting tool for university coursework. Track section-by-section word limits, university +-10% tolerances, and parse DOCX/PDF reports per heading." />
 
   <!-- Google Fonts: Outfit & JetBrains Mono -->
@@ -25,17 +25,22 @@
   <header class="header">
     <div class="header-container">
       <div class="logo-group" onclick="location.reload()">
-        <div class="logo-icon-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
+        <div class="logo-icon-wrap" title="Verba - Academic Suite">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="verbaGrad" x1="2" y1="4" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366F1" />
+                <stop offset="0.5" stop-color="#818CF8" />
+                <stop offset="1" stop-color="#A855F7" />
+              </linearGradient>
+            </defs>
+            <path d="M4 7L16 27L28 7" stroke="url(#verbaGrad)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 12L16 22L22 12" stroke="url(#verbaGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.65"/>
+            <circle cx="16" cy="6.5" r="2" fill="url(#verbaGrad)"/>
           </svg>
         </div>
         <div class="logo-text-wrap">
-          <div class="logo-title">Lexi<span>Count</span></div>
+          <div class="logo-title">Verba</div>
           <div class="logo-badge">Academic Coursework Suite</div>
         </div>
       </div>
@@ -353,7 +358,7 @@
     <div class="footer-container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <h4>LexiCount</h4>
+          <h4>Verba</h4>
           <p>An academic coursework word counter and heading analyzer built for university students, researchers, and writers.</p>
           <div style="margin-top: 0.85rem; font-size: 0.85rem; color: var(--text-muted);">
             Developed by <a href="https://github.com/ChaniruWeerasinghe" target="_blank" rel="noopener noreferrer" class="dev-credit-link">Chaniru Weerasinghe</a>
@@ -418,7 +423,7 @@
       </div>
 
       <div class="footer-bottom">
-        <div>Developed by <strong>Chaniru Weerasinghe</strong> &bull; &copy; 2026 LexiCount. All rights reserved.</div>
+        <div>Developed by <strong>Chaniru Weerasinghe</strong> &bull; &copy; 2026 Verba. All rights reserved.</div>
         <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
           Client-side Execution &bull; Zero Server Storage
         </div>
