@@ -54,6 +54,11 @@
   --text-heading: #111827;
   --text-inverse: #ffffff;
 
+  --logo-grad-1: #4338ca;
+  --logo-grad-2: #6366f1;
+  --logo-grad-3: #7c3aed;
+  --logo-badge-color: #4b5563;
+
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
@@ -92,6 +97,11 @@
   --text-subtle: #6b7280;
   --text-heading: #ffffff;
   --text-inverse: #08080a;
+
+  --logo-grad-1: #818cf8;
+  --logo-grad-2: #a78bfa;
+  --logo-grad-3: #c084fc;
+  --logo-badge-color: #9ca3af;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
   --shadow-md: 0 8px 16px -2px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04);
@@ -209,25 +219,20 @@ body {
 }
 
 .logo-title {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-heading);
-  line-height: 1.2;
-}
-
-.logo-title span {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  line-height: 1.15;
 }
 
 .logo-badge {
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.68rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  color: var(--logo-badge-color);
+  transition: var(--transition);
 }
 
 .header-actions {
