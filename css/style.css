@@ -34,31 +34,31 @@
   --info-bg: rgba(59, 130, 246, 0.12);
   --info-border: rgba(59, 130, 246, 0.3);
 
-  /* Light Theme (Default) */
-  --bg-page: #f8faff;
-  --bg-gradient: radial-gradient(circle at 10% 20%, rgba(238, 242, 255, 0.8) 0%, rgba(245, 243, 255, 0.6) 90.2%);
+  /* Light Theme (Default - Pure Plain White) */
+  --bg-page: #ffffff;
+  --bg-gradient: none;
   --bg-card: #ffffff;
   --bg-card-hover: #ffffff;
-  --bg-card-glass: rgba(255, 255, 255, 0.85);
-  --bg-surface: #f1f5f9;
+  --bg-card-glass: rgba(255, 255, 255, 0.95);
+  --bg-surface: #f9fafb;
   --bg-input: #ffffff;
   --bg-modal: #ffffff;
 
-  --border-color: #e2e8f0;
-  --border-subtle: #edf2f7;
-  --border-focus: #818cf8;
+  --border-color: #e5e7eb;
+  --border-subtle: #f3f4f6;
+  --border-focus: #6366f1;
 
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-subtle: #94a3b8;
-  --text-heading: #0f172a;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --text-subtle: #9ca3af;
+  --text-heading: #111827;
   --text-inverse: #ffffff;
 
-  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -72,32 +72,32 @@
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark Theme */
+/* Dark Theme (Pure Dark Grey) */
 [data-theme="dark"] {
-  --bg-page: #0b0f19;
-  --bg-gradient: radial-gradient(circle at 10% 20%, rgba(30, 27, 75, 0.3) 0%, rgba(15, 23, 42, 1) 90%);
-  --bg-card: #131b2e;
-  --bg-card-hover: #18233c;
-  --bg-card-glass: rgba(19, 27, 46, 0.85);
-  --bg-surface: #1e293b;
-  --bg-input: #101726;
-  --bg-modal: #131b2e;
+  --bg-page: #121212;
+  --bg-gradient: none;
+  --bg-card: #1e1e1e;
+  --bg-card-hover: #242424;
+  --bg-card-glass: rgba(30, 30, 30, 0.95);
+  --bg-surface: #282828;
+  --bg-input: #181818;
+  --bg-modal: #1e1e1e;
 
-  --border-color: #243048;
-  --border-subtle: #1c263c;
+  --border-color: #333333;
+  --border-subtle: #262626;
   --border-focus: #6366f1;
 
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --text-subtle: #64748b;
-  --text-heading: #f8fafc;
-  --text-inverse: #0b0f19;
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-subtle: #6b7280;
+  --text-heading: #f9fafb;
+  --text-inverse: #121212;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.35);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
 }
 
 /* ==========================================================================
@@ -244,17 +244,6 @@ body {
   align-items: center;
   position: relative;
   overflow: hidden;
-}
-
-.hero-banner::before {
-  content: '';
-  position: absolute;
-  top: -40%;
-  right: -10%;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-  pointer-events: none;
 }
 
 .hero-info h1 {

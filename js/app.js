@@ -203,10 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
             title: s.title,
             targetWords: s.targetWords,
             excluded: s.excluded,
-            text: s.text
+            text: s.text,
+            placeholder: s.placeholder
           }))
         };
-        localStorage.setItem('scholarly_word_counter_data', JSON.stringify(data));
+        localStorage.setItem('lexicount_v3_state', JSON.stringify(data));
       } catch (e) {
         console.warn('Could not save state to localStorage:', e);
       }
@@ -214,13 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSavedState() {
       try {
-        const saved = localStorage.getItem('scholarly_word_counter_data');
+        // Clear legacy state if exists
+        localStorage.removeItem('scholarly_word_counter_data');
+
+        const saved = localStorage.getItem('lexicount_v3_state');
         if (saved) {
           const parsed = JSON.parse(saved);
           this.state.globalTarget = parsed.globalTarget ?? 2000;
           this.state.tolerance = parsed.tolerance ?? 10;
           this.state.excludeCitations = parsed.excludeCitations ?? false;
-          this.state.activeTemplate = parsed.activeTemplate ?? 'essay';
+          this.state.activeTemplate = parsed.activeTemplate ?? 'custom';
 
           const targetInput = document.getElementById('global-target-input');
           if (targetInput) targetInput.value = this.state.globalTarget;
