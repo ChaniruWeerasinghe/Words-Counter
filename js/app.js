@@ -646,52 +646,151 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('doc-filename').textContent = doc.fileName;
       document.getElementById('doc-file-details').textContent = `${doc.fileType.toUpperCase()} • ${doc.fileSize} • ${doc.headingCount} Headings Detected`;
 
-      const tbody = document.getElementById('headings-table-body');
-      if (!tbody) return;
+      // Setup View Switcher Buttons
+      const btnReader = document.getElementById('btn-view-reader');
+      const btnTable = document.getElementById('btn-view-table');
+      const paperView = document.getElementById('doc-paper-view');
+      const tableView = document.getElementById('doc-table-view');
 
-      tbody.innerHTML = '';
+      if (btnReader && btnTable) {
+        btnReader.onclick = () => {
+          btnReader.classList.add('active');
+          btnTable.classList.remove('active');
+          paperView.style.display = 'flex';
+          tableView.style.display = 'none';
+        };
 
-      doc.sections.forEach((sec, idx) => {
-        const row = document.createElement('tr');
-        if (sec.excluded) row.classList.add('excluded-row');
-        row.id = `row-${sec.id}`;
+        btnTable.onclick = () => {
+          btnTable.classList.add('active');
+          btnReader.classList.remove('active');
+          paperView.style.display = 'none';
+          tableView.style.display = 'block';
+        };
+      }
 
-        const percentOfDoc = doc.totalRawWords > 0 ? Math.round((sec.wordCount / doc.totalRawWords) * 100) : 0;
-        const indentClass = `indent-${Math.min(sec.level || 1, 3)}`;
+      // 1. RENDER FORMATTED DOCUMENT PREVIEW (PAPER VIEW)
+      if (paperView) {
+        paperView.innerHTML = '';
 
-        row.innerHTML = `
-          <td>
-            <span class="heading-tag ${sec.tag || 'h1'}">${(sec.tag || 'h1').toUpperCase()}</span>
-          </td>
-          <td class="heading-name-col ${indentClass}">
-            <span>${this.escapeHtml(sec.title)}</span>
-            ${sec.isAutoExcluded ? '<span class="limit-status-pill warning" style="font-size:0.65rem; padding: 0.1rem 0.4rem;">Auto-Excluded</span>' : ''}
-          </td>
-          <td style="font-family: var(--font-mono); font-weight: 700;">
-            ${sec.wordCount.toLocaleString()} words
-          </td>
-          <td style="color: var(--text-muted); font-size: 0.8rem;">
-            ${percentOfDoc}%
-          </td>
-          <td>
-            <label class="switch-label">
-              <input type="checkbox" class="switch-input" id="doc-exclude-${sec.id}" ${sec.excluded ? 'checked' : ''} />
-              <span class="switch-slider"></span>
-              <span style="font-size:0.75rem;">Exclude</span>
-            </label>
-          </td>
-        `;
+        doc.sections.forEach((sec) => {
+          const stats = window.WordCounter.analyzeText(sec.rawText || sec.paragraphs.join('\n\n'), {
+            excludeCitations: this.state.excludeCitations
+          });
 
-        tbody.appendChild(row);
+          const percentOfDoc = doc.totalRawWords > 0 ? Math.round((sec.wordCount / doc.totalRawWords) * 100) : 0;
+          const sectionBlock = document.createElement('div');
+          sectionBlock.className = `doc-section-block ${sec.excluded ? 'excluded-doc-block' : ''}`;
+          sectionBlock.id = `paper-sec-${sec.id}`;
 
-        // Bind exclude checkbox
-        row.querySelector(`#doc-exclude-${sec.id}`)?.addEventListener('change', (e) => {
-          sec.excluded = e.target.checked;
-          row.classList.toggle('excluded-row', sec.excluded);
-          this.recalculateUploadedDocWords();
-          this.updateStats();
+          const paragraphsHtml = sec.paragraphs && sec.paragraphs.length > 0
+            ? sec.paragraphs.map(p => `<p class="doc-p">${this.escapeHtml(p)}</p>`).join('')
+            : `<p class="doc-p" style="color: var(--text-subtle); font-style: italic;">(No body text under this heading)</p>`;
+
+          sectionBlock.innerHTML = `
+            <div class="doc-section-header">
+              <div class="doc-section-title-wrap">
+                <span class="heading-tag ${sec.tag || 'h1'}">${(sec.tag || 'h1').toUpperCase()}</span>
+                <span class="doc-section-title">${this.escapeHtml(sec.title)}</span>
+                ${sec.isAutoExcluded ? '<span class="limit-status-pill warning" style="font-size:0.65rem;">Auto-Excluded</span>' : ''}
+              </div>
+
+              <div class="doc-section-stats-wrap">
+                <span class="stat-chip highlight" style="font-size:0.8rem; padding: 0.3rem 0.75rem;">
+                  <strong>${sec.wordCount.toLocaleString()}</strong> words
+                </span>
+                <span class="stat-chip" style="font-size:0.75rem;">
+                  ${stats.charsWithSpaces.toLocaleString()} chars
+                </span>
+                <span class="stat-chip" style="font-size:0.75rem;">
+                  ${percentOfDoc}% of report
+                </span>
+
+                <label class="switch-label" style="margin-left: 0.5rem;" title="Exclude this section from official assessable coursework count">
+                  <input type="checkbox" class="switch-input" id="paper-exclude-${sec.id}" ${sec.excluded ? 'checked' : ''} />
+                  <span class="switch-slider"></span>
+                  <span style="font-size:0.75rem; font-weight:600;">Exclude</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="doc-section-body">
+              ${paragraphsHtml}
+            </div>
+          `;
+
+          paperView.appendChild(sectionBlock);
+
+          // Bind Exclude Switch in Paper View
+          sectionBlock.querySelector(`#paper-exclude-${sec.id}`)?.addEventListener('change', (e) => {
+            sec.excluded = e.target.checked;
+            sectionBlock.classList.toggle('excluded-doc-block', sec.excluded);
+
+            // Sync with Table row
+            const tableRow = document.getElementById(`row-${sec.id}`);
+            const tableCheckbox = document.getElementById(`doc-exclude-${sec.id}`);
+            if (tableRow) tableRow.classList.toggle('excluded-row', sec.excluded);
+            if (tableCheckbox) tableCheckbox.checked = sec.excluded;
+
+            this.recalculateUploadedDocWords();
+            this.updateStats();
+          });
         });
-      });
+      }
+
+      // 2. RENDER HEADINGS SUMMARY TABLE
+      const tbody = document.getElementById('headings-table-body');
+      if (tbody) {
+        tbody.innerHTML = '';
+
+        doc.sections.forEach((sec) => {
+          const row = document.createElement('tr');
+          if (sec.excluded) row.classList.add('excluded-row');
+          row.id = `row-${sec.id}`;
+
+          const percentOfDoc = doc.totalRawWords > 0 ? Math.round((sec.wordCount / doc.totalRawWords) * 100) : 0;
+          const indentClass = `indent-${Math.min(sec.level || 1, 3)}`;
+
+          row.innerHTML = `
+            <td>
+              <span class="heading-tag ${sec.tag || 'h1'}">${(sec.tag || 'h1').toUpperCase()}</span>
+            </td>
+            <td class="heading-name-col ${indentClass}">
+              <span>${this.escapeHtml(sec.title)}</span>
+              ${sec.isAutoExcluded ? '<span class="limit-status-pill warning" style="font-size:0.65rem; padding: 0.1rem 0.4rem;">Auto-Excluded</span>' : ''}
+            </td>
+            <td style="font-family: var(--font-mono); font-weight: 700;">
+              ${sec.wordCount.toLocaleString()} words
+            </td>
+            <td style="color: var(--text-muted); font-size: 0.8rem;">
+              ${percentOfDoc}%
+            </td>
+            <td>
+              <label class="switch-label">
+                <input type="checkbox" class="switch-input" id="doc-exclude-${sec.id}" ${sec.excluded ? 'checked' : ''} />
+                <span class="switch-slider"></span>
+                <span style="font-size:0.75rem;">Exclude</span>
+              </label>
+            </td>
+          `;
+
+          tbody.appendChild(row);
+
+          // Bind Exclude switch in Table View
+          row.querySelector(`#doc-exclude-${sec.id}`)?.addEventListener('change', (e) => {
+            sec.excluded = e.target.checked;
+            row.classList.toggle('excluded-row', sec.excluded);
+
+            // Sync with Paper view
+            const paperBlock = document.getElementById(`paper-sec-${sec.id}`);
+            const paperCheckbox = document.getElementById(`paper-exclude-${sec.id}`);
+            if (paperBlock) paperBlock.classList.toggle('excluded-doc-block', sec.excluded);
+            if (paperCheckbox) paperCheckbox.checked = sec.excluded;
+
+            this.recalculateUploadedDocWords();
+            this.updateStats();
+          });
+        });
+      }
     },
 
     recalculateUploadedDocWords() {
@@ -705,8 +804,8 @@ document.addEventListener('DOMContentLoaded', () => {
     transferUploadedToLive() {
       if (!this.state.uploadedDoc || !this.state.uploadedDoc.sections) return;
 
-      this.state.sections = this.state.uploadedDoc.sections.map(s => ({
-        id: `section_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      this.state.sections = this.state.uploadedDoc.sections.map((s, idx) => ({
+        id: `section_${Date.now()}_${idx}_${Math.random().toString(36).substr(2, 4)}`,
         title: s.title,
         targetWords: 0,
         excluded: s.excluded,
@@ -719,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.saveState();
       this.updateStats();
 
-      window.Toast?.success('Transferred to Workspace', 'All parsed sections imported to Live Section Counter.');
+      window.Toast?.success('Transferred to Workspace', `Created ${this.state.sections.length} separate section panels in Live Section Counter.`);
     },
 
     /* ==========================================================================

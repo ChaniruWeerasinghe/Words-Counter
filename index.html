@@ -273,7 +273,7 @@
           </div>
         </div>
 
-        <!-- Document Headings Breakdown Results -->
+        <!-- Document Headings Breakdown & Preview Results -->
         <div class="doc-results-card" id="doc-results-card" style="display: none;">
           <div class="doc-info-bar">
             <div class="doc-file-badge">
@@ -286,14 +286,36 @@
               </div>
             </div>
 
-            <button type="button" class="btn btn-primary btn-sm" id="transfer-to-live-btn">
+            <button type="button" class="btn btn-primary btn-sm" id="transfer-to-live-btn" title="Convert all sections into individual editable panels in the Live Workspace">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-              <span>Transfer to Live Workspace</span>
+              <span>Transfer All Sections to Live Workspace</span>
             </button>
           </div>
 
-          <!-- Headings Table -->
-          <div class="headings-table-wrapper">
+          <!-- View Switcher Bar -->
+          <div class="doc-view-switcher-bar">
+            <div class="doc-view-toggle-btns">
+              <button type="button" class="doc-view-btn active" id="btn-view-reader">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span>Formatted Document Preview</span>
+              </button>
+              <button type="button" class="doc-view-btn" id="btn-view-table">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="12" y1="3" x2="12" y2="21"></line></svg>
+                <span>Headings Summary Table</span>
+              </button>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+              Per-section live word count & exclusion controls
+            </div>
+          </div>
+
+          <!-- VIEW 1: Formatted Document Reader Paper View -->
+          <div class="doc-paper-view" id="doc-paper-view">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+
+          <!-- VIEW 2: Headings Table View -->
+          <div class="headings-table-wrapper" id="doc-table-view" style="display: none;">
             <table class="headings-table">
               <thead>
                 <tr>

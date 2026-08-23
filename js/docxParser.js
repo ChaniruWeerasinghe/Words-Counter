@@ -1,7 +1,7 @@
 /**
  * DOCX Document Heading & Word Count Parser
  * Parses Microsoft Word (.docx) documents in-browser using Mammoth.js,
- * reconstructing the full heading hierarchy and computing word counts per section.
+ * extracting standard headings, bold titles, and numbered section hierarchy.
  */
 
 const DocxParser = {
@@ -12,7 +12,7 @@ const DocxParser = {
    */
   async parseFile(file) {
     if (!window.mammoth) {
-      throw new Error('Mammoth.js library is not loaded. Please check your internet connection.');
+      throw new Error('Mammoth.js library is not loaded. Please check your network connection.');
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -33,41 +33,82 @@ const DocxParser = {
     const sections = [];
     let currentSection = {
       id: 'sec_0',
-      title: 'Preamble / Front Matter',
+      title: 'Cover & Document Preamble',
       level: 1,
       tag: 'h1',
       paragraphs: [],
       rawText: '',
       wordCount: 0,
-      excluded: false,
-      isAutoExcluded: false
+      excluded: true,
+      isAutoExcluded: true
     };
 
     const isExcludedKeyword = (title) => {
       const lower = title.toLowerCase().trim();
-      return /^(references|bibliography|works cited|appendices|appendix|table of contents|contents|acknowledgements|declaration)/i.test(lower);
+      return /^(references|bibliography|works cited|appendices|appendix|table of contents|contents|acknowledgements|declaration|ethical declaration|cover page|title page)/i.test(lower);
     };
 
-    Array.from(root.children).forEach((node, index) => {
-      const tagName = node.tagName.toLowerCase();
+    const isNodeHeading = (node) => {
+      const tag = node.tagName.toLowerCase();
+      const text = node.textContent.trim();
+      if (!text || text.length > 90) return false;
 
-      if (/^h[1-6]$/.test(tagName)) {
-        // If the current section has text or is not empty, push it
-        if (currentSection.paragraphs.length > 0 || currentSection.title !== 'Preamble / Front Matter') {
+      // 1. Standard HTML H1-H6 tags
+      if (/^h[1-6]$/.test(tag)) return true;
+
+      // 2. Paragraph containing ONLY strong/b tag with short title
+      if (tag === 'p') {
+        const strongEl = node.querySelector('strong, b');
+        if (strongEl && strongEl.textContent.trim() === text && text.length <= 80) {
+          return true;
+        }
+
+        // Numbered heading in p: "1. Introduction", "2 Ethical Declaration", "3.1 Background"
+        if (/^(\d+(\.\d+)*\s*[\.:\-]?\s+[A-Z][\w\s\(\)\/,-]{2,70})$/i.test(text)) {
+          return true;
+        }
+
+        // Academic keyword standalone paragraph
+        if (/^(abstract|executive summary|table of contents|contents|ethical declaration.*|introduction|literature review|methodology|results & discussion|results|discussion|conclusion|recommendations?|references|bibliography|appendices|appendix)$/i.test(text)) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    Array.from(root.children).forEach((node) => {
+      const text = node.textContent.trim();
+      if (!text) return;
+
+      if (isNodeHeading(node)) {
+        // Flush previous section
+        if (currentSection.paragraphs.length > 0 || currentSection.title !== 'Cover & Document Preamble') {
           currentSection.rawText = currentSection.paragraphs.join('\n\n');
           currentSection.wordCount = WordCounter.countWords(currentSection.rawText);
           sections.push(currentSection);
         }
 
-        const headingText = node.textContent.trim() || `Untitled Heading ${sections.length + 1}`;
-        const level = parseInt(tagName.replace('h', ''), 10);
-        const autoExclude = isExcludedKeyword(headingText);
+        const tag = node.tagName.toLowerCase();
+        let level = 1;
+        if (/^h[1-6]$/.test(tag)) {
+          level = parseInt(tag.replace('h', ''), 10);
+        } else {
+          const numMatch = text.match(/^(\d+(\.\d+)*)/);
+          if (numMatch) {
+            level = Math.min(numMatch[1].split('.').filter(p => p.length > 0).length, 3);
+          } else {
+            level = 2;
+          }
+        }
+
+        const autoExclude = isExcludedKeyword(text);
 
         currentSection = {
-          id: `sec_${sections.length + 1}_${Date.now()}`,
-          title: headingText,
+          id: `sec_${sections.length + 1}_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+          title: text,
           level: level,
-          tag: tagName,
+          tag: `h${level}`,
           paragraphs: [],
           rawText: '',
           wordCount: 0,
@@ -75,26 +116,22 @@ const DocxParser = {
           isAutoExcluded: autoExclude
         };
       } else {
-        const pText = node.textContent.trim();
-        if (pText.length > 0) {
-          currentSection.paragraphs.push(pText);
-        }
+        currentSection.paragraphs.push(text);
       }
     });
 
-    // Push the final section
-    if (currentSection.paragraphs.length > 0 || currentSection.title !== 'Preamble / Front Matter') {
+    // Push final section
+    if (currentSection.paragraphs.length > 0 || currentSection.title !== 'Cover & Document Preamble') {
       currentSection.rawText = currentSection.paragraphs.join('\n\n');
       currentSection.wordCount = WordCounter.countWords(currentSection.rawText);
       sections.push(currentSection);
     }
 
-    // If no headings were found, put all content in a single section
     if (sections.length === 0) {
       const fullText = root.textContent.trim();
       sections.push({
         id: 'sec_1',
-        title: 'Full Document Body',
+        title: 'Full Document Text',
         level: 1,
         tag: 'h1',
         paragraphs: [fullText],
