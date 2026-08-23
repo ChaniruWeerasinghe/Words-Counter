@@ -6,6 +6,15 @@
 const AcademicTemplates = {
   templates: [
     {
+      id: 'custom',
+      name: 'Single Section (Quick Check)',
+      description: 'Clean single workspace for quick section checking',
+      defaultTarget: 0,
+      sections: [
+        { title: 'Main Section', targetWords: 0, excluded: false, placeholder: 'Type or paste your coursework text here to check word count...' }
+      ]
+    },
+    {
       id: 'essay',
       name: 'Undergraduate Essay',
       description: 'Standard 5-part academic essay structure (~2,000 words)',
@@ -63,15 +72,6 @@ const AcademicTemplates = {
         { title: '3. Evaluation of Alternatives', targetWords: 700, excluded: false, placeholder: 'Comparison of 3 strategic options with pros, cons, and financial feasibility...' },
         { title: '4. Recommended Strategy & Action Plan', targetWords: 600, excluded: false, placeholder: 'Implementation roadmap, KPI milestones, risk mitigation strategy...' },
         { title: 'References & Appendices', targetWords: 0, excluded: true, placeholder: 'Financial model tables, references...' }
-      ]
-    },
-    {
-      id: 'custom',
-      name: 'Custom / Blank Workspace',
-      description: 'Start fresh with a single clean section',
-      defaultTarget: 1000,
-      sections: [
-        { title: 'Section 1', targetWords: 1000, excluded: false, placeholder: 'Type or paste your text here...' }
       ]
     }
   ],

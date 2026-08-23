@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       theme: 'light',
       sections: [],
       uploadedDoc: null,
-      activeTemplate: 'essay'
+      activeTemplate: 'custom'
     },
 
     init() {
@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Error reading localStorage:', e);
       }
 
-      // Default to Essay Template if empty
-      this.loadTemplate('essay', false);
+      // Default to Single Section Template if empty
+      this.loadTemplate('custom', false);
     },
 
     /* ==========================================================================
