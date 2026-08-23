@@ -165,14 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Clear Workspace Button
       document.getElementById('clear-all-btn')?.addEventListener('click', () => this.clearWorkspace());
 
-      // Export / Declaration Modal Triggers
-      document.getElementById('export-declaration-btn')?.addEventListener('click', () => this.openDeclarationModal());
-      document.getElementById('close-modal-btn')?.addEventListener('click', () => this.closeDeclarationModal());
-      document.getElementById('modal-overlay')?.addEventListener('click', (e) => {
-        if (e.target.id === 'modal-overlay') this.closeDeclarationModal();
-      });
-      document.getElementById('copy-declaration-btn')?.addEventListener('click', () => this.copyDeclaration());
-
       // File Upload Drag and Drop
       this.initDropzone();
     },
@@ -801,81 +793,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (progressLabel) {
         progressLabel.textContent = `${tol.percent}% of ${this.state.globalTarget.toLocaleString()}w`;
       }
-    },
-
-    /* ==========================================================================
-       Academic Declaration Export Modal
-       ========================================================================== */
-    openDeclarationModal() {
-      const modal = document.getElementById('modal-overlay');
-      const reportBox = document.getElementById('declaration-report-box');
-      if (!modal || !reportBox) return;
-
-      reportBox.textContent = this.generateDeclarationText();
-      modal.classList.add('open');
-    },
-
-    closeDeclarationModal() {
-      const modal = document.getElementById('modal-overlay');
-      modal?.classList.remove('open');
-    },
-
-    generateDeclarationText() {
-      const isLive = this.state.mode === 'live';
-      const sections = isLive ? this.state.sections : (this.state.uploadedDoc?.sections || []);
-
-      let assessableWords = 0;
-      let totalWords = 0;
-      let excludedWords = 0;
-
-      const lines = [];
-      lines.push('================================================================');
-      lines.push('               COURSEWORK WORD COUNT DECLARATION                ');
-      lines.push('================================================================\n');
-      lines.push(`Generated On       : ${new Date().toLocaleString()}`);
-      lines.push(`Target Word Limit  : ${this.state.globalTarget.toLocaleString()} words (Margin: ±${this.state.tolerance}%)`);
-      lines.push(`Mode               : ${isLive ? 'Live Coursework Workspace' : `Document Analysis (${this.state.uploadedDoc?.fileName || 'Upload'})`}\n`);
-      lines.push('----------------------------------------------------------------');
-      lines.push('SECTION BREAKDOWN                                    WORDS     STATUS');
-      lines.push('----------------------------------------------------------------');
-
-      sections.forEach(s => {
-        const count = isLive ? window.WordCounter.countWords(s.text, { excludeCitations: this.state.excludeCitations }) : s.wordCount;
-        totalWords += count;
-        if (s.excluded) {
-          excludedWords += count;
-        } else {
-          assessableWords += count;
-        }
-
-        const titlePadded = (s.title || 'Untitled').padEnd(48, '.');
-        const countPadded = count.toString().padStart(6, ' ');
-        const status = s.excluded ? '[EXCLUDED]' : '[ASSESSABLE]';
-        lines.push(`${titlePadded} ${countPadded}  ${status}`);
-      });
-
-      const tol = window.WordCounter.evaluateTolerance(assessableWords, this.state.globalTarget, this.state.tolerance);
-
-      lines.push('----------------------------------------------------------------\n');
-      lines.push(`OFFICIAL ASSESSABLE WORDS : ${assessableWords.toLocaleString()} words`);
-      lines.push(`EXCLUDED SECTIONS WORDS   : ${excludedWords.toLocaleString()} words`);
-      lines.push(`TOTAL DOCUMENT RAW WORDS  : ${totalWords.toLocaleString()} words`);
-      lines.push(`TOLERANCE STATUS          : ${tol.label} (${tol.percent}% of target)\n`);
-      lines.push('================================================================');
-      lines.push('I confirm that the assessable word count declared above complies with');
-      lines.push('the university coursework assessment regulations.');
-      lines.push('================================================================');
-
-      return lines.join('\n');
-    },
-
-    copyDeclaration() {
-      const text = this.generateDeclarationText();
-      navigator.clipboard.writeText(text).then(() => {
-        window.Toast?.success('Declaration Copied', 'Word count declaration copied to clipboard.');
-      }).catch(() => {
-        window.Toast?.error('Copy Failed', 'Please select and copy the text manually.');
-      });
     },
 
     render() {
