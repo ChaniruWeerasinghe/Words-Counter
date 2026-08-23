@@ -72,31 +72,31 @@
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Dark Theme (Pure Dark Grey) */
+/* Dark Theme (#3B3A3B) */
 [data-theme="dark"] {
-  --bg-page: #121212;
+  --bg-page: #3B3A3B;
   --bg-gradient: none;
-  --bg-card: #1e1e1e;
-  --bg-card-hover: #242424;
-  --bg-card-glass: rgba(30, 30, 30, 0.95);
-  --bg-surface: #282828;
-  --bg-input: #181818;
-  --bg-modal: #1e1e1e;
+  --bg-card: #2e2d2e;
+  --bg-card-hover: #363536;
+  --bg-card-glass: rgba(59, 58, 59, 0.85);
+  --bg-surface: #464546;
+  --bg-input: #282728;
+  --bg-modal: #2e2d2e;
 
-  --border-color: #333333;
-  --border-subtle: #262626;
-  --border-focus: #6366f1;
+  --border-color: #504f50;
+  --border-subtle: #444344;
+  --border-focus: #818cf8;
 
-  --text-main: #e5e7eb;
-  --text-muted: #9ca3af;
-  --text-subtle: #6b7280;
-  --text-heading: #f9fafb;
-  --text-inverse: #121212;
+  --text-main: #f0f0f0;
+  --text-muted: #c2c1c2;
+  --text-subtle: #969596;
+  --text-heading: #ffffff;
+  --text-inverse: #3B3A3B;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.35), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
 }
 
@@ -107,6 +107,27 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+/* Remove default chunky browser scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
 }
 
 html {
@@ -129,15 +150,15 @@ body {
 }
 
 /* ==========================================================================
-   Header & Navigation
+   Header & Navigation (Background-less)
    ========================================================================== */
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: var(--bg-card-glass);
+  background: transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-color);
   padding: 0.85rem 1.5rem;
   transition: var(--transition);
@@ -562,12 +583,12 @@ body {
 }
 
 /* ==========================================================================
-   Footer
+   Footer (Background-less)
    ========================================================================== */
 .footer {
   margin-top: auto;
   border-top: 1px solid var(--border-color);
-  background: var(--bg-card);
+  background: transparent;
   padding: 2.5rem 1.5rem 1.5rem 1.5rem;
   color: var(--text-muted);
   font-size: 0.9rem;
